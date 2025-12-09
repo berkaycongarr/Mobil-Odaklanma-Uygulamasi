@@ -1,75 +1,79 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { COLORS, SHADOWS } from '../constants/theme';
 
 const CATEGORIES = [
-  { id: 1, label: 'Kodlama' },
-  { id: 2, label: 'Ders Çalışma' },
-  { id: 3, label: 'Kitap Okuma' },
-  { id: 4, label: 'Spor' },
-  { id: 5, label: 'Meditasyon' },
+  { id: 1, label: 'Kodlama', icon: '💻' },
+  { id: 2, label: 'Ders', icon: '📚' },
+  { id: 3, label: 'Kitap', icon: '📖' },
+  { id: 4, label: 'Spor', icon: '💪' },
+  { id: 5, label: 'Meditasyon', icon: '🧘' },
 ];
 
 const CategorySelector = ({ selectedCategory, onSelect, disabled }) => {
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>Kategori Seçimi</Text>
+      <Text style={styles.title}>Kategori Seç</Text>
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false} 
         contentContainerStyle={styles.container}
       >
-        {CATEGORIES.map((cat) => (
-          <TouchableOpacity
-            key={cat.id}
-            disabled={disabled} // Sayaç çalışırken değiştirmeyi engelle
-            style={[
-              styles.item,
-              selectedCategory === cat.label && styles.selectedItem,
-              disabled && styles.disabledItem
-            ]}
-            onPress={() => onSelect(cat.label)}
-          >
-            <Text 
+        {CATEGORIES.map((cat) => {
+          const isSelected = selectedCategory === cat.label;
+          return (
+            <TouchableOpacity
+              key={cat.id}
+              disabled={disabled}
+              activeOpacity={0.8}
               style={[
-                styles.itemText, 
-                selectedCategory === cat.label && styles.selectedItemText
+                styles.item,
+                isSelected && styles.selectedItem,
+                disabled && styles.disabledItem,
+                isSelected ? SHADOWS.medium : SHADOWS.small
               ]}
+              onPress={() => onSelect(cat.label)}
             >
-              {cat.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text style={[styles.itemText, isSelected && styles.selectedText]}>
+                {cat.icon} {cat.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: { marginVertical: 20 },
-  title: { fontSize: 16, fontWeight: '600', marginBottom: 10, color: '#333', paddingLeft: 5 },
-  container: { paddingHorizontal: 5 },
+  wrapper: { marginVertical: 25 },
+  title: { 
+    fontSize: 14, 
+    fontWeight: '700', 
+    color: COLORS.textLight, 
+    marginBottom: 15, 
+    marginLeft: 5,
+    textTransform: 'uppercase',
+    letterSpacing: 1
+  },
+  container: { paddingHorizontal: 5, paddingBottom: 10 }, // Gölge kesilmesin diye padding
   item: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 20,
-    marginRight: 10,
-    borderWidth: 1,
-    borderColor: '#e0e0e0'
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: COLORS.surface,
+    borderRadius: 30, // Tam yuvarlak köşeler
+    marginRight: 12,
   },
   selectedItem: {
-    backgroundColor: '#4a90e2', // Seçili renk (Mavi)
-    borderColor: '#4a90e2',
+    backgroundColor: COLORS.primary,
+    transform: [{ scale: 1.05 }] // Seçilince hafif büyüsün
   },
-  disabledItem: {
-    opacity: 0.5
-  },
+  disabledItem: { opacity: 0.6 },
   itemText: {
-    color: '#333',
-    fontWeight: '500'
+    color: COLORS.text,
+    fontWeight: '600',
+    fontSize: 15
   },
-  selectedItemText: {
-    color: '#fff'
-  }
+  selectedText: { color: '#FFF' }
 });
 
 export default CategorySelector;
