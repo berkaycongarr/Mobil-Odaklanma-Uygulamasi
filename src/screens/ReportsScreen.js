@@ -1,8 +1,11 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { Dimensions, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { COLORS, SHADOWS } from '../constants/theme';
 import { calculateStats } from '../utils/statsHelper';
 import { focusStorage } from '../utils/storage';
 
@@ -20,88 +23,133 @@ const ReportsScreen = () => {
     setLoading(false);
   };
 
-  // Sayfa her odaklandığında veriyi yenile
   useFocusEffect(
     useCallback(() => {
       loadData();
     }, [])
   );
 
-  if (loading || !stats) {
+  if (loading) {
     return (
       <View style={styles.center}>
-        <Text>Veriler yükleniyor...</Text>
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }
 
-  // Grafik Ayarları
+  // Grafik Konfigürasyonu (Tema renkleriyle)
   const chartConfig = {
-    backgroundGradientFrom: "#fff",
-    backgroundGradientTo: "#fff",
-    color: (opacity = 1) => `rgba(74, 144, 226, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    backgroundGradientFrom: COLORS.surface,
+    backgroundGradientTo: COLORS.surface,
+    color: (opacity = 1) => `rgba(108, 99, 255, ${opacity})`, // COLORS.primary (Mor)
+    labelColor: (opacity = 1) => COLORS.textLight,
+    strokeWidth: 2,
     barPercentage: 0.7,
+    decimalPlaces: 0, // Virgüllü sayı gösterme
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headerTitle}>Raporlar</Text>
+      <StatusBar barStyle="dark-content" />
+      
+      {/* Başlık Alanı */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Haftalık Analiz</Text>
+        <Text style={styles.headerSubtitle}>Performans Raporların</Text>
+      </View>
       
       <ScrollView 
         contentContainerStyle={styles.scrollContent}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={loadData} />}
+        refreshControl={
+          <RefreshControl 
+            refreshing={loading} 
+            onRefresh={loadData} 
+            tintColor={COLORS.primary} 
+          />
+        }
+        showsVerticalScrollIndicator={false}
       >
         
-        {/* Özet Kartları */}
+        {/* Özet Kartları Row'u */}
         <View style={styles.statsRow}>
-          <View style={[styles.card, { backgroundColor: '#E3F2FD' }]}>
-            <Text style={styles.cardValue}>{stats.todayDuration} dk</Text>
-            <Text style={styles.cardLabel}>Bugün</Text>
+          {/* Kart 1: Bugün */}
+          <View style={[styles.card, SHADOWS.small]}>
+            <View style={[styles.iconBox, { backgroundColor: '#E0E7FF' }]}>
+                <Ionicons name="today" size={18} color={COLORS.primary} />
+            </View>
+            <Text style={styles.cardValue}>{stats?.todayDuration || 0}</Text>
+            <Text style={styles.cardLabel}>Bugün (dk)</Text>
           </View>
-          <View style={[styles.card, { backgroundColor: '#E8F5E9' }]}>
-            <Text style={styles.cardValue}>{stats.totalDuration} dk</Text>
-            <Text style={styles.cardLabel}>Toplam</Text>
+
+          {/* Kart 2: Toplam */}
+          <View style={[styles.card, SHADOWS.small]}>
+             <View style={[styles.iconBox, { backgroundColor: '#E8F5E9' }]}>
+                <Ionicons name="time" size={18} color={COLORS.success} />
+            </View>
+            <Text style={[styles.cardValue, { color: COLORS.success }]}>{stats?.totalDuration || 0}</Text>
+            <Text style={styles.cardLabel}>Toplam (dk)</Text>
           </View>
-          <View style={[styles.card, { backgroundColor: '#FFEBEE' }]}>
-            <Text style={styles.cardValue}>{stats.totalDistractions}</Text>
-            <Text style={styles.cardLabel}>Dağılma</Text>
+
+          {/* Kart 3: Odak Kaybı */}
+          <View style={[styles.card, SHADOWS.small]}>
+            <View style={[styles.iconBox, { backgroundColor: '#FFEBEE' }]}>
+                <Ionicons name="alert-circle" size={18} color={COLORS.secondary} />
+            </View>
+            <Text style={[styles.cardValue, { color: COLORS.secondary }]}>{stats?.totalDistractions || 0}</Text>
+            <Text style={styles.cardLabel}>Odak Kaybı</Text>
           </View>
         </View>
 
-        {/* Pasta Grafik (Kategori Dağılımı) */}
-        {stats.pieData.length > 0 ? (
-          <View style={styles.chartContainer}>
+        {/* Bölüm 1: Pasta Grafik */}
+        <View style={[styles.chartCard, SHADOWS.medium]}>
+          <View style={styles.chartHeader}>
             <Text style={styles.chartTitle}>Kategori Dağılımı</Text>
+            <Ionicons name="pie-chart" size={20} color={COLORS.textLight} />
+          </View>
+          
+          {stats?.pieData?.length > 0 ? (
             <PieChart
               data={stats.pieData}
-              width={screenWidth - 40}
+              width={screenWidth - 60} // Padding payı
               height={220}
               chartConfig={chartConfig}
               accessor={"population"}
               backgroundColor={"transparent"}
-              paddingLeft={"15"}
+              paddingLeft={"0"}
+              center={[10, 0]}
               absolute
             />
-          </View>
-        ) : (
-          <Text style={styles.noDataText}>Henüz veri yok.</Text>
-        )}
+          ) : (
+            <View style={styles.noDataContainer}>
+                <Text style={styles.noDataText}>Henüz veri yok 📉</Text>
+            </View>
+          )}
+        </View>
 
-        {/* Çubuk Grafik (Haftalık Analiz) */}
-        <View style={styles.chartContainer}>
-          <Text style={styles.chartTitle}>Son 7 Gün (Dakika)</Text>
+        {/* Bölüm 2: Çubuk Grafik */}
+        <View style={[styles.chartCard, SHADOWS.medium]}>
+          <View style={styles.chartHeader}>
+            <Text style={styles.chartTitle}>Son 7 Gün (Dakika)</Text>
+            <Ionicons name="bar-chart" size={20} color={COLORS.textLight} />
+          </View>
+
           <BarChart
-            data={stats.barData}
-            width={screenWidth - 40}
+            data={stats?.barData || { labels: [], datasets: [{ data: [] }] }}
+            width={screenWidth - 60}
             height={220}
             yAxisLabel=""
-            yAxisSuffix="dk"
+            yAxisSuffix=""
             chartConfig={chartConfig}
-            verticalLabelRotation={30}
+            verticalLabelRotation={0}
             fromZero
+            showBarTops={false}
+            showValuesOnTopOfBars
+            style={{ borderRadius: 16, marginTop: 10 }}
           />
         </View>
+        
+        {/* Alt Boşluk (Scroll rahatlığı için) */}
+        <View style={{ height: 20 }} />
 
       </ScrollView>
     </SafeAreaView>
@@ -109,47 +157,89 @@ const ReportsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
   headerTitle: { 
     fontSize: 28, 
-    fontWeight: 'bold', 
-    margin: 20, 
-    color: '#333' 
+    fontWeight: '800', 
+    color: COLORS.text 
   },
-  scrollContent: { paddingBottom: 40 },
+  headerSubtitle: {
+    fontSize: 14,
+    color: COLORS.textLight,
+    fontWeight: '500',
+    marginTop: 4
+  },
   
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 20 },
+  
+  // İstatistik Kartları
   statsRow: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    paddingHorizontal: 20,
-    marginBottom: 30
+    marginBottom: 25
   },
   card: {
-    width: '30%',
-    padding: 15,
-    borderRadius: 15,
+    width: '31%',
+    paddingVertical: 15,
+    paddingHorizontal: 5,
+    backgroundColor: COLORS.surface,
+    borderRadius: 20,
     alignItems: 'center',
-    elevation: 2
+    justifyContent: 'center',
   },
-  cardValue: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
-  cardLabel: { fontSize: 12, color: '#555' },
+  iconBox: {
+      width: 36,
+      height: 36,
+      borderRadius: 12,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 8
+  },
+  cardValue: { 
+      fontSize: 20, 
+      fontWeight: '800', 
+      marginBottom: 2, 
+      color: COLORS.primary 
+  },
+  cardLabel: { 
+      fontSize: 11, 
+      color: COLORS.textLight, 
+      fontWeight: '600' 
+  },
 
-  chartContainer: {
-    marginHorizontal: 20,
-    marginBottom: 30,
-    alignItems: 'center'
+  // Grafik Kartları
+  chartCard: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 25,
+  },
+  chartHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10
   },
   chartTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 10,
-    alignSelf: 'flex-start'
+    fontWeight: '700',
+    color: COLORS.text
+  },
+  noDataContainer: {
+      height: 150,
+      justifyContent: 'center',
+      alignItems: 'center'
   },
   noDataText: {
-    textAlign: 'center',
-    color: '#999',
-    marginVertical: 20
+      color: COLORS.textLight,
+      fontSize: 16
   }
 });
 
