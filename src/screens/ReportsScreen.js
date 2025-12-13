@@ -37,22 +37,22 @@ const ReportsScreen = () => {
     );
   }
 
-  // Grafik Konfigürasyonu (Tema renkleriyle)
+
   const chartConfig = {
     backgroundGradientFrom: COLORS.surface,
     backgroundGradientTo: COLORS.surface,
-    color: (opacity = 1) => `rgba(108, 99, 255, ${opacity})`, // COLORS.primary (Mor)
+    color: (opacity = 1) => `rgba(108, 99, 255, ${opacity})`, 
     labelColor: (opacity = 1) => COLORS.textLight,
     strokeWidth: 2,
     barPercentage: 0.7,
-    decimalPlaces: 0, // Virgüllü sayı gösterme
+    decimalPlaces: 0, 
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Başlık Alanı */}
+      {}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Haftalık Analiz</Text>
         <Text style={styles.headerSubtitle}>Performans Raporların</Text>
@@ -70,9 +70,9 @@ const ReportsScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         
-        {/* Özet Kartları Row'u */}
+        {}
         <View style={styles.statsRow}>
-          {/* Kart 1: Bugün */}
+          {}
           <View style={[styles.card, SHADOWS.small]}>
             <View style={[styles.iconBox, { backgroundColor: '#E0E7FF' }]}>
                 <Ionicons name="today" size={18} color={COLORS.primary} />
@@ -81,7 +81,7 @@ const ReportsScreen = () => {
             <Text style={styles.cardLabel}>Bugün (dk)</Text>
           </View>
 
-          {/* Kart 2: Toplam */}
+          {}
           <View style={[styles.card, SHADOWS.small]}>
              <View style={[styles.iconBox, { backgroundColor: '#E8F5E9' }]}>
                 <Ionicons name="time" size={18} color={COLORS.success} />
@@ -90,7 +90,7 @@ const ReportsScreen = () => {
             <Text style={styles.cardLabel}>Toplam (dk)</Text>
           </View>
 
-          {/* Kart 3: Odak Kaybı */}
+          {}
           <View style={[styles.card, SHADOWS.small]}>
             <View style={[styles.iconBox, { backgroundColor: '#FFEBEE' }]}>
                 <Ionicons name="alert-circle" size={18} color={COLORS.secondary} />
@@ -100,7 +100,7 @@ const ReportsScreen = () => {
           </View>
         </View>
 
-        {/* Bölüm 1: Pasta Grafik */}
+        {}
         <View style={[styles.chartCard, SHADOWS.medium]}>
           <View style={styles.chartHeader}>
             <Text style={styles.chartTitle}>Kategori Dağılımı</Text>
@@ -110,7 +110,7 @@ const ReportsScreen = () => {
           {stats?.pieData?.length > 0 ? (
             <PieChart
               data={stats.pieData}
-              width={screenWidth - 60} // Padding payı
+              width={screenWidth - 60} 
               height={220}
               chartConfig={chartConfig}
               accessor={"population"}
@@ -126,7 +126,7 @@ const ReportsScreen = () => {
           )}
         </View>
 
-        {/* Bölüm 2: Çubuk Grafik */}
+        {}
         <View style={[styles.chartCard, SHADOWS.medium]}>
           <View style={styles.chartHeader}>
             <Text style={styles.chartTitle}>Son 7 Gün (Dakika)</Text>
@@ -148,7 +148,7 @@ const ReportsScreen = () => {
           />
         </View>
         
-        {/* Alt Boşluk (Scroll rahatlığı için) */}
+        {}
         <View style={{ height: 20 }} />
 
       </ScrollView>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   
   scrollContent: { paddingHorizontal: 20, paddingBottom: 20 },
   
-  // İstatistik Kartları
+ 
   statsRow: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
       fontWeight: '600' 
   },
 
-  // Grafik Kartları
+  
   chartCard: {
     backgroundColor: COLORS.surface,
     borderRadius: 24,

@@ -1,50 +1,44 @@
-# Welcome to your Expo app 👋
+#  Odaklanma Takibi ve Raporlama Uygulaması 
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+GitHub Linki: https://github.com/berkaycongarr/Mobil-Odaklanma-Uygulamasi
 
-## Get started
+Bu proje, React Native ve Expo kullanılarak geliştirilmiş, dijital dikkat dağınıklığıyla mücadele etmeyi amaçlayan bir mobil uygulamadır. Kullanıcıların odaklanma seanslarını takip eder, arka plana atıldığında dikkat dağınıklığını tespit eder ve gelişmiş grafiklerle raporlar sunar.
 
-1. Install dependencies
+## Özellikler
 
-   ```bash
-   npm install
-   ```
+ Özelleştirilebilir Zamanlayıcı: 25 dakikalık  odaklanma sayacı.
+ Akıllı Dikkat Takibi: Uygulama `Active` durumundan `Background` durumuna geçtiğinde sayacı otomatik duraklatır ve dikkat dağınıklığı sayısını artırır.
+ Raporlama:
+    * Günlük ve Toplam Odaklanma Süresi.
+    * Kategori Bazlı Pasta Grafik (Kodlama, Ders, Kitap vb.).
+    * Son 7 Günün Performansını Gösteren Çubuk Grafik.
 
-2. Start the app
 
-   ```bash
-   npx expo start
-   ```
+##  Kurulum ve Çalıştırma
 
-In the output, you'll find options to open the app in a
+Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1.  Repoyu Klonlayın:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+2.  Paketleri Yükleyin:
+   
 
-## Get a fresh project
+3.  Uygulamayı Başlatın:
+  
+    npx expo start
+ 
 
-When you're ready, run:
 
-```bash
-npm run reset-project
-```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+##  Proje Mimarisi 
 
-## Learn more
+Proje, sürdürülebilirlik ve okunabilirlik için modüler bir yapıda geliştirilmiştir:
 
-To learn more about developing your project with Expo, look at the following resources:
+* `src/components`: Tekrar kullanılabilir UI parçaları (CategorySelector).
+* `src/screens`: Ana ekranlar (HomeScreen, ReportsScreen).
+* `src/hooks`: İş mantığını (Logic) arayüzden ayıran özel kancalar (`useFocusTimer`).
+* `src/utils`: Veritabanı ve hesaplama yardımcıları (`storage.js`, `statsHelper.js`).
+* `src/constants`: Renk paleti ve tema ayarları (`theme.js`).
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+Hazırlayan: Berkay Çongar

@@ -55,17 +55,17 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 1
   },
-  container: { paddingHorizontal: 5, paddingBottom: 10 }, // Gölge kesilmesin diye padding
+  container: { paddingHorizontal: 5, paddingBottom: 10 }, 
   item: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     backgroundColor: COLORS.surface,
-    borderRadius: 30, // Tam yuvarlak köşeler
+    borderRadius: 30, 
     marginRight: 12,
   },
   selectedItem: {
     backgroundColor: COLORS.primary,
-    transform: [{ scale: 1.05 }] // Seçilince hafif büyüsün
+    transform: [{ scale: 1.05 }] 
   },
   disabledItem: { opacity: 0.6 },
   itemText: {

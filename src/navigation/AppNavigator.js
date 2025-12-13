@@ -1,8 +1,8 @@
-import { Ionicons } from '@expo/vector-icons'; // İkonlar için
+import { Ionicons } from '@expo/vector-icons'; 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
-// Ekranları içe aktar
+
 import HomeScreen from '../screens/HomeScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 
@@ -13,7 +13,7 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerShown: false, // Üstteki varsayılan başlığı gizle
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
